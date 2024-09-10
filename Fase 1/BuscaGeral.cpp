@@ -171,20 +171,20 @@ vector<vector<string>> buscaEmLarguraPassoAPasso(const string &inicio, const str
     while (!fila.empty())
     {
         vector<string> estadoAtual; // Vetor para armazenar o estado atual da fila
-        int tamanhoFila = fila.size();
+        
        
-        for (int i = 0; i < tamanhoFila; ++i)
-        {
+      
             No *atual = fila.front();
             fila.pop();
             estadoAtual.push_back(atual->nome);
-
+            passos.push_back(estadoAtual);
             if (atual->nome == objetivo)
             {
                 custoTotal = atual->custoTotal;
                 passos.push_back(reconstruirCaminho(atual));
                 return passos;
             }
+            estadoAtual.pop_back();
 
             for (const auto &filho : atual->filhos)
             {
@@ -195,10 +195,11 @@ vector<vector<string>> buscaEmLarguraPassoAPasso(const string &inicio, const str
                 {
                     fila.push(proximoNo);
                     visitados.insert(proximoNo->nome);
+                    estadoAtual.push_back(proximoNo->nome);
                     proximoNo->pai = atual;
                     proximoNo->custoTotal = custo + atual->custoTotal;
                 }
-            }
+            
         }
 
         passos.push_back(estadoAtual); // Adiciona o estado atual da fila aos passos
@@ -340,20 +341,19 @@ vector<vector<string>> buscaEmProfundidadepassoapasso(const string &inicio, cons
     while (!pilha.empty())
     {
         vector<string> estadoAtual; // Vetor para armazenar o estado atual da pilha
-        int tamanhopilha = pilha.size();
 
-        for (int i = 0; i < tamanhopilha; ++i)
-        {
+      
             No *atual = pilha.top();
             pilha.pop();
             estadoAtual.push_back(atual->nome);
-
+            passos.push_back(estadoAtual);
             if (atual->nome == objetivo)
             {
                 custoTotal = atual->custoTotal;
                 passos.push_back(reconstruirCaminho(atual));
                 return passos;
             }
+            estadoAtual.pop_back();
 
             for (const auto &filho : atual->filhos)
             {
@@ -363,13 +363,15 @@ vector<vector<string>> buscaEmProfundidadepassoapasso(const string &inicio, cons
                 if (visitados.find(proximoNo->nome) == visitados.end())
                 {   
                     pilha.push(proximoNo);
+            
+                    estadoAtual.push_back(proximoNo->nome);
                     visitados.insert(proximoNo->nome);
                     
                     proximoNo->pai = atual;
                     proximoNo->custoTotal = custo + atual->custoTotal;
                 }
             }
-        }
+        
 
         passos.push_back(estadoAtual); // Adiciona o estado atual da fila aos passos
     }
@@ -404,13 +406,16 @@ void Profundidade_passo(const string& cidadeI, const string& cidadeF, int &custo
 vector<vector<string>> passos = buscaEmProfundidadepassoapasso(cidadeI, cidadeF, custoTotal);
 
     for (size_t i = 0; i < passos.size(); ++i)
-    {
-        cout << "Passo " << i + 1 << ": ";
+    {   
+        if((i+1)%2!=0){
+            cout<<"Elemento processado: ";
+        }else{
+        cout << "Passo " << i + 1 << ": ";}
         for (const string &nome : passos[i])
         {
             cout << nome << " ";
         }
-        cout << endl;
+        cout << endl<<endl;
     }
 
     if (custoTotal != -1)
@@ -454,13 +459,16 @@ void Largura_passo(const string& cidadeI, const string& cidadeF,int &custoTotal)
     vector<vector<string>> passos = buscaEmLarguraPassoAPasso(cidadeI, cidadeF, custoTotal);
 
     for (size_t i = 0; i < passos.size(); ++i)
-    {
-        cout << "Passo " << i + 1 << ": ";
+    {   
+        if((i+1)%2!=0){
+            cout<<"Elemento processado: ";
+        }else{
+        cout << "Passo " << i + 1 << ": ";}
         for (const string &nome : passos[i])
         {
             cout << nome << " ";
         }
-        cout << endl;
+        cout << endl<<endl;
     }
 
     if (custoTotal != -1)
